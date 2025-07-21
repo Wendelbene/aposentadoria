@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultoria INSS - Aposentadoria</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --inss-blue: #0066B3;
+            --inss-yellow: #F9A825;
+            --inss-light: #E6F2FF;
+            --success: #00aa00;
+            --terminal-green: #00ff00;
+            --pix-green: #32BBAD;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f3f2f1;
+            margin: 0;
+            padding: 0;
+            color: #323130;
+            background-image: linear-gradient(135deg, var(--inss-light) 0%, #f3f2f1 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            flex: 1;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132), 0 0.3px 0.9px 0 rgba(0,0,0,.108);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--inss-blue) 0%, var(--inss-yellow) 100%);
+        }
+        
+        .inss-logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .inss-logo-content {
+            background: linear-gradient(135deg, var(--inss-blue) 0%, var(--inss-yellow) 100%);
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: var(--inss-blue);
+            font-size: 26px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .main-title {
+            font-size: 28px;
+            background: linear-gradient(90deg, var(--inss-blue) 0%, var(--inss-yellow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .main-title:after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--inss-blue) 0%, var(--inss-yellow) 100%);
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        p {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background-color: var(--inss-blue);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            width: 100%;
+            font-size: 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover:after {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            background-color: #0056a3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .btn-invalidez {
+            background-color: var(--inss-yellow);
+        }
+        
+        .btn-invalidez:hover {
+            background-color: #e0971c;
+        }
+
+        .btn-pix {
+            background-color: var(--pix-green);
+        }
+        
+        .btn-pix:hover {
+            background-color: #2aa89a;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            font-size: 13px;
+            color: #605e5c;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .alert {
+            background-color: #fff4ce;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            text-align: left;
+            border-left: 4px solid var(--inss-yellow);
+            font-size: 15px;
+        }
+        
+        .benefits {
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .benefit-item {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .checkmark {
+            color: var(--success);
+            margin-right: 10px;
+            font-weight: bold;
+            min-width: 24px;
+            font-size: 18px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--inss-blue);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--inss-blue);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 102, 179, 0.2);
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .option-item {
+            padding: 16px;
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            text-align: left;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-item i {
+            margin-right: 12px;
+            color: var(--inss-blue);
+            font-size: 20px;
+        }
+        
+        .option-item:hover {
+            background-color: #e6f2ff;
+            border-color: var(--inss-blue);
+            transform: translateY(-2px);
+        }
+        
+        .option-item.selected {
+            background-color: #e6f2ff;
+            border-color: var(--inss-blue);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .success-message {
+            color: var(--success);
+            font-weight: bold;
+            font-size: 24px;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #e6ffed;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+        
+        .result-box {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        
+        .temp-credentials {
+            margin: 15px 0;
+            font-size: 18px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .price {
+            font-size: 32px;
+            color: var(--inss-blue);
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--inss-blue);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 5px 0;
+        }
+        
+        .back-btn i {
+            margin-right: 5px;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin: 0 5px;
+        }
+        
+        .step.active {
+            background-color: var(--inss-blue);
+        }
+        
+        .step.completed {
+            background-color: var(--success);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background-color: #e0e0e0;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--inss-blue) 0%, var(--inss-yellow) 100%);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .terminal {
+            background-color: #000;
+            border: 1px solid var(--terminal-green);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: var(--terminal-green);
+            min-height: 200px;
+            text-align: left;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        
+        .status-message {
+            margin: 8px 0;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+        
+        .terminal-progress-bar {
+            height: 3px;
+            background-color: #003300;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        
+        .terminal-progress {
+            height: 100%;
+            background-color: var(--terminal-green);
+            width: 0%;
+            transition: width 1s;
+        }
+        
+        .payment-methods {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .payment-method {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-method.selected {
+            border-color: var(--pix-green);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #f0f7ff;
+        }
+        
+        .payment-method i {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: var(--pix-green);
+        }
+        
+        .payment-method .pix-text {
+            color: var(--pix-green);
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+                margin: 10px auto;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 22px;
+            }
+            
+            .main-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela 1: Inicial -->
+        <div class="card" id="screen1">
+            <div class="inss-logo">
+                <div class="inss-logo-content">
+                    PREVIDÊNCIA SOCIAL
+                </div>
+            </div>
+            
+            <h1 class="main-title">SAIBA SE VOCÊ TEM DIREITO À APOSENTADORIA</h1>
+            
+            <p>Faça uma simulação gratuita e descubra se você já pode solicitar sua aposentadoria pelo INSS.</p>
+            
+            <div class="alert">
+                <strong>Importante:</strong> Este serviço oficial ajuda você a verificar seu direito à aposentadoria de forma rápida e segura.
+            </div>
+            
+            <button class="btn" onclick="showScreen(2)">
+                <i class="fas fa-clock"></i> Aposentadoria por Tempo
+            </button>
+            
+            <button class="btn btn-invalidez" onclick="showScreen(5)">
+                <i class="fas fa-wheelchair"></i> Aposentadoria por Invalidez
+            </button>
+            
+            <div class="footer">
+                © 2025 INSS Brasil - Instituto Nacional do Seguro Social<br>
+                <a href="#" style="color: var(--inss-blue);">Termos de uso</a> | 
+                <a href="#" style="color: var(--inss-blue);">Privacidade</a> | 
+                <a href="#" style="color: var(--inss-blue);">Suporte</a>
+            </div>
+        </div>
+        
+        <!-- Tela 2: Aposentadoria por Tempo - Formulário -->
+        <div class="card hidden" id="screen2">
+            <button class="back-btn" onclick="showScreen(1)">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step active">2</div>
+                <div class="step">3</div>
+                <div class="step">4</div>
+            </div>
+            
+            <h1><i class="fas fa-clock"></i> Aposentadoria por Tempo</h1>
+            
+            <p>Preencha os dados abaixo para verificar seu direito à aposentadoria por tempo de contribuição.</p>
+            
+            <div class="form-group">
+                <label for="idade">Sua idade:</label>
+                <input type="number" id="idade" placeholder="Ex: 58" min="18" max="120">
+            </div>
+            
+            <div class="form-group">
+                <label for="tempoServico">Estimativa de tempo de serviço (anos):</label>
+                <input type="number" id="tempoServico" placeholder="Ex: 30" min="1" max="60">
+            </div>
+            
+            <div class="form-group">
+                <label for="genero">Gênero:</label>
+                <select id="genero">
+                    <option value="">Selecione</option>
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                </select>
+            </div>
+            
+            <button class="btn" onclick="calculateRetirement()">
+                <i class="fas fa-calculator"></i> Verificar Direito
+            </button>
+        </div>
+        
+        <!-- Tela 3: Processamento da Aposentadoria por Tempo -->
+        <div class="card hidden" id="screen3">
+            <button class="back-btn" onclick="showScreen(2)">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step active">3</div>
+                <div class="step">4</div>
+            </div>
+            
+            <h1>Processando Informações</h1>
+            
+            <div class="terminal">
+                <div class="status-message">> Conectando ao sistema do INSS...</div>
+                <div class="status-message">> Verificando dados cadastrais...</div>
+                
+                <div class="terminal-progress-bar">
+                    <div class="terminal-progress" id="terminalProgress1"></div>
+                </div>
+                
+                <div id="terminalMessages1">
+                    <div class="status-message" id="tmsg1" style="display: none;">> Validando tempo de contribuição...</div>
+                    <div class="status-message" id="tmsg2" style="display: none;">> Calculando carência necessária...</div>
+                    <div class="status-message" id="tmsg3" style="display: none;">> Consultando histórico previdenciário...</div>
+                    <div class="status-message" id="tmsg4" style="display: none;">> Analisando requisitos legais...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tela 4: Resultado da Aposentadoria por Tempo -->
+        <div class="card hidden" id="screen4">
+            <button class="back-btn" onclick="showScreen(1)">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step completed">3</div>
+                <div class="step active">4</div>
+            </div>
+            
+            <h1>Resultado da Análise</h1>
+            
+            <div class="success-message">
+                <i class="fas fa-check-circle"></i> VOCÊ PODE TER DIREITO À APOSENTADORIA!
+            </div>
+            
+            <div class="result-box">
+                <p>Com base nas informações fornecidas, você atende aos requisitos mínimos para solicitar sua aposentadoria por tempo de contribuição.</p>
+                
+                <div class="alert">
+                    <strong>Atenção:</strong> Este resultado é preliminar e baseado nas informações fornecidas. Para uma análise completa e detalhada, consulte um especialista.
+                </div>
+                
+                <button class="btn" onclick="showScreen(8)">
+                    <i class="fas fa-arrow-right"></i> Obter Análise Completa
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tela 5: Aposentadoria por Invalidez - Formulário -->
+        <div class="card hidden" id="screen5">
+            <button class="back-btn" onclick="showScreen(1)">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step active">2</div>
+                <div class="step">3</div>
+                <div class="step">4</div>
+            </div>
+            
+            <h1><i class="fas fa-wheelchair"></i> Aposentadoria por Invalidez</h1>
+            
+            <p>Preencha os dados abaixo para verificar seu direito à aposentadoria por invalidez.</p>
+            
+            <div class="form-group">
+                <label for="idadeInvalidez">Sua idade:</label>
+                <input type="number" id="idadeInvalidez" placeholder="Ex: 45" min="18" max="120">
+            </div>
+            
+            <div class="form-group">
+                <label for="tempoContribuicao">Tempo de contribuição (anos):</label>
+                <input type="number" id="tempoContribuicao" placeholder="Ex: 15" min="0" max="60">
+            </div>
+            
+            <p>Selecione o motivo pelo qual você busca a aposentadoria por invalidez:</p>
+            
+            <div class="options">
+                <div class="option-item" onclick="selectOption(this)">
+                    <i class="fas fa-heartbeat"></i>
+                    <div>Doença Grave (câncer, cardiopatia, etc.)</div>
+                </div>
+                
+                <div class="option-item" onclick="selectOption(this)">
+                    <i class="fas fa-car-crash"></i>
+                    <div>Acidente</div>
+                </div>
+                
+                <div class="option-item" onclick="selectOption(this)">
+                    <i class="fas fa-hard-hat"></i>
+                    <div>Doença Ocupacional</div>
+                </div>
+                
+                <div class="option-item" onclick="selectOption(this)">
+                    <i class="fas fa-procedures"></i>
+                    <div>Outros problemas de saúde</div>
+                </div>
+            </div>
+            
+            <button class="btn" id="btnContinue" onclick="calculateInvalidity()" disabled>
+                <i class="fas fa-calculator"></i> Verificar Direito
+            </button>
+        </div>
+        
+        <!-- Tela 6: Processamento da Aposentadoria por Invalidez -->
+        <div class="card hidden" id="screen6">
+            <button class="back-btn" onclick="showScreen(5)">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step active">3</div>
+                <div class="step">4</div>
+            </div>
+            
+            <h1>Processando Informações</h1>
+            
+            <div class="terminal">
+                <div class="status-message">> Conectando ao sistema do INSS...</div>
+                <div class="status-message">> Validando dados de saúde...</div>
+                
+                <div class="terminal-progress-bar">
+                    <div class="terminal-progress" id="terminalProgress2"></div>
+                </div>
+                
+                <div id="terminalMessages2">
+                    <div class="status-message" id="tmsg5" style="display: none;">> Analisando laudos médicos...</div>
+                    <div class="status-message" id="tmsg6" style="display: none;">> Verificando tempo de contribuição...</div>
+                    <div class="status-message" id="tmsg7" style="display: none;">> Consultando perícia médica...</div>
+                    <div class="status-message" id="tmsg8" style="display: none;">> Validando requisitos para invalidez...</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tela 7: Resultado da Aposentadoria por Invalidez -->
+        <div class="card hidden" id="screen7">
+            <button class="back-btn" onclick="showScreen(1)">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step completed">3</div>
+                <div class="step active">4</div>
+            </div>
+            
+            <h1>Resultado da Análise</h1>
+            
+            <div class="success-message">
+                <i class="fas fa-check-circle"></i> VOCÊ PODE TER DIREITO À APOSENTADORIA!
+            </div>
+            
+            <div class="result-box">
+                <p>Com base nas informações fornecidas, você pode ter direito à aposentadoria por invalidez.</p>
+                
+                <div class="alert">
+                    <strong>Atenção:</strong> Este resultado é preliminar. A concessão da aposentadoria por invalidez depende de perícia médica oficial do INSS.
+                </div>
+                
+                <button class="btn" onclick="showScreen(8)">
+                    <i class="fas fa-arrow-right"></i> Obter Análise Completa
+                </button>
+            </div>
+        </div>
+        
+        <!-- Tela 8: Oferta do Produto -->
+        <div class="card hidden" id="screen8">
+            <button class="back-btn" onclick="showScreen(1)">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </button>
+            
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step completed">3</div>
+                <div class="step active">4</div>
+            </div>
+            
+            <h1>Guia Completo para Aposentadoria</h1>
+            
+            <p>Para receber o acesso completo ao passo a passo detalhado para solicitar sua aposentadoria e evitar erros que podem atrasar seu benefício:</p>
+            
+            <div class="price">R$ 19,90</div>
+            
+            <div class="benefits">
+                <div class="benefit-item">
+                    <span class="checkmark"><i class="fas fa-check"></i></span>
+                    Guia completo com todos os documentos necessários
+                </div>
+                <div class="benefit-item">
+                    <span class="checkmark"><i class="fas fa-check"></i></span>
+                    Modelos de requerimento prontos para usar
+                </div>
+                <div class="benefit-item">
+                    <span class="checkmark"><i class="fas fa-check"></i></span>
+                    Informações sobre valores e cálculos
+                </div>
+                <div class="benefit-item">
+                    <span class="checkmark"><i class="fas fa-check"></i></span>
+                    Dicas para agilizar o processo
+                </div>
+                <div class="benefit-item">
+                    <span class="checkmark"><i class="fas fa-check"></i></span>
+                    Informações sobre perícia médica (para invalidez)
+                </div>
+            </div>
+            
+            <!-- Botão principal de CTA -->
+            <button class="btn" onclick="window.location.href='https://checkout.aposentadoria-oficial.space/VCCL1O8SC35S'">
+                <i class="fas fa-lock"></i> Adquirir Acesso Imediato
+            </button>
+            
+            <!-- Botão alternativo de PIX -->
+            <button class="btn btn-pix" onclick="window.location.href='https://checkout.aposentadoria-oficial.space/VCCL1O8SC35S'">
+                <i class="fas fa-qrcode"></i> Pagar com PIX
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenNumber) {
+            // Hide all screens
+            document.querySelectorAll('.card').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            // Show requested screen
+            document.getElementById(`screen${screenNumber}`).classList.remove('hidden');
+            
+            // Start terminal animations for processing screens
+            if(screenNumber === 3) {
+                startTerminalAnimation(1);
+            }
+            if(screenNumber === 6) {
+                startTerminalAnimation(2);
+            }
+        }
+        
+        function startTerminalAnimation(terminalId) {
+            const progressBar = document.getElementById(`terminalProgress${terminalId}`);
+            progressBar.style.width = '100%';
+            
+            setTimeout(() => { 
+                document.getElementById(`tmsg${(terminalId-1)*4+1}`).style.display = 'block';
+            }, 1500);
+            
+            setTimeout(() => { 
+                document.getElementById(`tmsg${(terminalId-1)*4+2}`).style.display = 'block';
+            }, 3500);
+            
+            setTimeout(() => { 
+                document.getElementById(`tmsg${(terminalId-1)*4+3}`).style.display = 'block';
+            }, 5500);
+            
+            setTimeout(() => { 
+                document.getElementById(`tmsg${(terminalId-1)*4+4}`).style.display = 'block';
+                
+                // Go to result screen after processing
+                setTimeout(() => {
+                    showScreen(terminalId === 1 ? 4 : 7);
+                }, 2000);
+            }, 7500);
+        }
+        
+        function selectOption(element) {
+            // Remove selection from all options
+            document.querySelectorAll('.option-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            element.classList.add('selected');
+            
+            // Enable continue button
+            document.getElementById('btnContinue').disabled = false;
+        }
+        
+        function calculateRetirement() {
+            const idade = document.getElementById('idade').value;
+            const tempoServico = document.getElementById('tempoServico').value;
+            const genero = document.getElementById('genero').value;
+            
+            if(!idade || !tempoServico || !genero) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+            
+            showScreen(3);
+        }
+        
+        function calculateInvalidity() {
+            const idade = document.getElementById('idadeInvalidez').value;
+            const tempo = document.getElementById('tempoContribuicao').value;
+            
+            if(!idade || !tempo) {
+                alert('Por favor, preencha todos os campos');
+                return;
+            }
+            
+            const selectedOption = document.querySelector('.option-item.selected');
+            if(!selectedOption) {
+                alert('Por favor, selecione o motivo da invalidez');
+                return;
+            }
+            
+            showScreen(6);
+        }
+    </script>
+</body>
+</html>
